@@ -5,5 +5,7 @@ linker = "/opt/homebrew/bin/x86_64-linux-gnu-gcc"
 linker = "/opt/homebrew/bin/aarch64-linux-gnu-gcc"
 
 [env]
-GITHUB_URL = "https://raw.githubusercontent.com/dcmd-org/cli"
+GITHUB_RAW_URL = "https://raw.githubusercontent.com/dcmd-org"
+GITHUB_URL = "https://github.com/dcmd-org"
+WEBSITE_URL = "https://dcmd.io"
 DNS_IMAGE = "public.ecr.aws/t3l2m2a4/dns:latest"

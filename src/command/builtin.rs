@@ -47,8 +47,8 @@ pub fn handle_help() {
 pub fn handle_update(config: &Config) {
   println!("Updating CLI for platform: {}", config.get_env().get_platform());
 
-  let mut url = String::from(env!("GITHUB_URL"));
-  url.push_str("/main/cli/bin/");
+  let mut url = String::from(env!("GITHUB_RAW_URL"));
+  url.push_str("/cli/main/cli/bin/");
   url.push_str(config.get_env().get_platform());
   url.push_str("/dcmd");
 
