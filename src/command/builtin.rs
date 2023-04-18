@@ -13,7 +13,7 @@ pub fn handle_list(config: &Config) {
   println!("Available builtin commands: \n");
 
   super::Command::iter_builtin()
-  .for_each(|command| println!("dcmd {}", command));
+  .for_each(|command| println!("dcmd {}{}", super::get_fixed_length(&command.to_string(), 30), command.get_description()));
 
   println!("\nAvailable custom commands: \n");
 
@@ -53,7 +53,7 @@ pub fn handle_list(config: &Config) {
 
     if let Some(captures) = captures {
       if let Some(cap) = captures.get(1) {
-        println!("dcmd {}\t\t{}", result, cap.as_str());
+        println!("dcmd {}{}", super::get_fixed_length(&result, 30), cap.as_str());
       }
     } else {
       println!("dcmd {}", result);

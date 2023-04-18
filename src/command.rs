@@ -101,6 +101,23 @@ impl<'a> Command<'a> {
       Command::Dns(_) => CommandType::System,
     }
   }
+
+  pub fn get_description(&self) -> &str {
+    match self {
+      Command::Start(_) => "Start a project or a given service",
+      Command::Stop(_) => "Stop a project or a given service",
+      Command::Restart(_) => "Restart a project or a given service",
+      Command::Up(_) => "Initialise a project or a service, should be ran again if you make a changes in your compose file",
+      Command::Down(_) => "Remove project containers and related data",
+      Command::Help(_) => "Show help",
+      Command::Version(_) => "Show the current version",
+      Command::List(_) => "List available commands",
+      Command::Update(_) => "Update the CLI executable",
+      Command::Template(_) => "Template operations [get] [template_name]",
+      Command::Dns(_) => "DNS operations [start|stop]",
+      _ => ""
+    }
+  }
 }
 
 pub fn handle(config: &Config) {
@@ -147,6 +164,15 @@ pub fn get_command<'a>(args: &'a [String], default: &'a String) -> Command<'a> {
     "template" => Command::Template("template"),
     custom => Command::Custom(custom)
   }
+}
+
+fn get_fixed_length(value: &String, length: u16) -> String {
+  let mut formatted = value.to_string();
+  while formatted.len() < length.into() {
+    formatted.push(' ');
+  }
+
+  formatted
 }
 
 fn exec_command(mut command: std::process::Command) {

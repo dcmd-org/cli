@@ -73,7 +73,7 @@ checksum = "a74858bcfe44b22016cb49337d7b6f04618c58e5dbfdef61b06b8c434324a0bc"
 
 [[package]]
 name = "dcmd"
-version = "1.0.11"
+version = "1.0.12"
 dependencies = [
  "curl",
  "current_platform",
