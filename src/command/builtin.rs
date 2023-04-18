@@ -1,4 +1,4 @@
-use std::{io::{Error}, process::{Command}, fs::{self, DirEntry}, path::Path, env};
+use std::{io::{Error, Write}, process::{Command}, fs::{self, DirEntry, File}, path::Path, env};
 
 use curl::easy::Easy;
 
@@ -76,10 +76,12 @@ pub fn handle_update(config: &Config) {
   let mut easy = Easy::new();
   easy.url(url.as_str()).unwrap();
 
+  let mut executable = File::create(env::current_exe().unwrap())
+  .expect("Can't write file to the destination path.");
+
   let mut transfer = easy.transfer();
   transfer.write_function(|data| {
-    fs::write(env::current_exe().unwrap(), data)
-    .expect("Can't write file to the destination path.");
+    executable.write_all(data).expect("Can't write file to the destination path");
     Ok(data.len())
   })
   .expect("Error while writing the file");
