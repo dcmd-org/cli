@@ -69,23 +69,22 @@ pub fn handle_update(config: &Config) {
   println!("Updating CLI for platform: {}", config.get_env().get_platform());
 
   let mut url = String::from(env!("GITHUB_RAW_URL"));
-  url.push_str("/cli/main/cli/bin/");
+  url.push_str("/cli/main/bin/");
   url.push_str(config.get_env().get_platform());
   url.push_str("/dcmd");
 
   let mut easy = Easy::new();
   easy.url(url.as_str()).unwrap();
 
-  easy
-  .transfer()
-  .write_function(|data| {
+  let mut transfer = easy.transfer();
+  transfer.write_function(|data| {
     fs::write(env::current_exe().unwrap(), data)
     .expect("Can't write file to the destination path.");
     Ok(data.len())
   })
   .expect("Error while writing the file");
 
-  easy
+  transfer
   .perform()
   .expect("Error while fetching data from the remote server");
 
