@@ -37,7 +37,28 @@ pub fn handle_list(config: &Config) {
       Vec::from([entry.file_name().into_string().unwrap()])
     }
   })
-  .for_each(|result| println!("dcmd {}", result));
+  .for_each(|result| {
+    let rdesc = regex::Regex::new(r"# ?@description ?: ?(.*)").unwrap();
+    let mut file_path = Path::new(config.get_env().get_docker_folder())
+    .join("commands");
+
+    result.split(' ')
+    .for_each(|f| file_path.push(f));
+
+    let file_content = fs::read_to_string(file_path)
+    .expect("Cannot read command file");
+
+    let captures = rdesc
+    .captures(&file_content);
+
+    if let Some(captures) = captures {
+      if let Some(cap) = captures.get(1) {
+        println!("dcmd {}\t\t{}", result, cap.as_str());
+      }
+    } else {
+      println!("dcmd {}", result);
+    }
+  });
 }
 
 pub fn handle_help() {
