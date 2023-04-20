@@ -73,7 +73,7 @@ impl Command<'static> {
       Command::Restart("restart"),
       Command::Up("up"),
       Command::Down("down"),
-      Command::Help("Help"),
+      Command::Help("help"),
       Command::Version("version"),
       Command::List("list"),
       Command::Update("update"),
