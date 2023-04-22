@@ -46,6 +46,7 @@ fn get_template(config: &Config) {
     .arg("clone")
     .arg(templates_repository.as_str())
     .arg(templates_path.to_str().unwrap())
+    .arg("--quiet")
     .status()
     .expect("Cannot run git clone command");
 
@@ -55,6 +56,7 @@ fn get_template(config: &Config) {
     .arg("pull")
     .arg("origin")
     .arg("main")
+    .arg("--quiet")
     .current_dir(templates_path.to_str().unwrap())
     .status()
     .expect("Cannot run git pull command");
@@ -76,6 +78,16 @@ fn get_template(config: &Config) {
 
   let copy_from = template_path.join(".docker");
   let copy_dest = env::current_dir().unwrap().join(".docker");
+
+  if copy_dest.is_dir() {
+    if casual::confirm(".docker directory will be replaced, continue?") {
+      fs::remove_dir_all(&copy_dest)
+      .expect("Cannot delete the directory, please check file permissions");
+    } else {
+      process::exit(1);
+    }
+  }
+
   let mut options = CopyOptions::new();
   options.overwrite = true;
   options.copy_inside = true;

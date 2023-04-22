@@ -1,4 +1,4 @@
-use std::{process::Command, path::Path};
+use std::{process::{Command, self}, path::Path};
 
 use crate::config::Config;
 
@@ -27,13 +27,25 @@ pub fn handle_custom(config: &Config) {
     .join(config.get_arguments().get(0).unwrap());
     let args = &mut config.get_arguments().clone()[1..];
     command
-    .arg(custom_command_path)
+    .arg(&custom_command_path)
     .args(args);
+
+    if !Path::new(&custom_command_path).is_file() {
+      println!("Custom command {} does not exists", custom_command_path.to_str().unwrap());
+      process::exit(1);
+    }
+
   } else {
     command
-    .arg(custom_command_path)
+    .arg(&custom_command_path)
     .args(config.get_arguments());
+
+    if !Path::new(&custom_command_path).is_file() {
+      println!("Custom command {} does not exists", custom_command_path.to_str().unwrap());
+      process::exit(1);
+    }
   }
+
 
   super::exec_command(command);
 

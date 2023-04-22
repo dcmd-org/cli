@@ -24,13 +24,18 @@ fn handle_dns_start() {
   .arg("-d")
   .arg(env!("DNS_IMAGE"));
 
+  println!("Launching the DNS container...");
+
   super::exec_command(command);
 }
+
 fn handle_dns_stop() {
   let mut command = Command::new("docker");
   command
   .arg("stop")
   .arg("dcmddns");
+
+  println!("Stopping the DNS container...");
 
   super::exec_command(command);
 }

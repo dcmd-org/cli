@@ -1,4 +1,4 @@
-use std::{io::{Error, Write}, process::{Command}, fs::{self, DirEntry, File}, path::Path, env};
+use std::{io::{Error, Write}, process::{Command, self}, fs::{self, DirEntry, File}, path::Path, env};
 
 use curl::easy::Easy;
 
@@ -67,7 +67,6 @@ pub fn handle_help() {
 
 pub fn handle_update(config: &Config) {
   println!("Updating CLI for platform: {}", config.get_env().get_platform());
-
   let mut url = String::from(env!("GITHUB_RAW_URL"));
   url.push_str("/cli/main/bin/");
   url.push_str(config.get_env().get_platform());
@@ -77,7 +76,11 @@ pub fn handle_update(config: &Config) {
   easy.url(url.as_str()).unwrap();
 
   let mut executable = File::create(env::current_exe().unwrap())
-  .expect("Can't write file to the destination path.");
+  .unwrap_or_else(|_| {
+    println!("Can't write to the destination path, please check file permission or run the command as sudoer.");
+
+    process::exit(1);
+  });
 
   let mut transfer = easy.transfer();
   transfer.write_function(|data| {
@@ -88,9 +91,13 @@ pub fn handle_update(config: &Config) {
 
   transfer
   .perform()
-  .expect("Error while fetching data from the remote server");
+  .unwrap_or_else(|_| {
+    println!("The CLI was not able to fetch data from the remote server, check your internet connection or download the update manually {}/docs/getting-started/cli-installation", env!("WEBSITE_URL"));
 
-  println!("CLI successfully updated ✅");
+    process::exit(1);
+  });
+
+  // println!("CLI successfully updated ✅");
 }
 
 pub fn handle_version(config: &Config) {
