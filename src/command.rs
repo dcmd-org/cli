@@ -5,6 +5,7 @@ pub mod builtin;
 pub mod custom;
 pub mod dns;
 pub mod template;
+pub mod toolbox;
 
 #[derive(Debug)]
 pub enum Command<'a> {
@@ -19,6 +20,7 @@ pub enum Command<'a> {
   Help(&'a str),
   Version(&'a str),
   Template(&'a str),
+  Toolbox(&'a str),
   Dns(&'a str),
 }
 
@@ -41,6 +43,7 @@ impl<'a> Clone for Command<'a> {
       Command::Help(value) => Command::Help(value),
       Command::Version(value) => Command::Version(value),
       Command::Template(value) => Command::Template(value),
+      Command::Toolbox(value) => Command::Toolbox(value),
       Command::Dns(value) => Command::Custom(value),
     }
   }
@@ -60,6 +63,7 @@ impl<'a> Display for Command<'a> {
       Command::Help(value) => write!(f, "{}", value),
       Command::Version(value) => write!(f, "{}", value),
       Command::Template(value) => write!(f, "{}", value),
+      Command::Toolbox(value) => write!(f, "{}", value),
       Command::Dns(value) => write!(f, "{}", value),
     }
   }
@@ -67,7 +71,7 @@ impl<'a> Display for Command<'a> {
 
 impl Command<'static> {
   pub fn iter_builtin() -> Iter<'static, Command<'static>> {
-    static COMMANDS: [Command; 11] = [
+    static COMMANDS: [Command; 12] = [
       Command::Start("start"),
       Command::Stop("strop"),
       Command::Restart("restart"),
@@ -78,6 +82,7 @@ impl Command<'static> {
       Command::List("list"),
       Command::Update("update"),
       Command::Template("template"),
+      Command::Toolbox("toolbox"),
       Command::Dns("dns"),
     ];
     COMMANDS.iter()
@@ -98,6 +103,7 @@ impl<'a> Command<'a> {
       Command::Help(_) => CommandType::System,
       Command::Version(_) => CommandType::System,
       Command::Template(_) => CommandType::System,
+      Command::Toolbox(_) => CommandType::System,
       Command::Dns(_) => CommandType::System,
     }
   }
@@ -114,6 +120,7 @@ impl<'a> Command<'a> {
       Command::List(_) => "List available commands",
       Command::Update(_) => "Update the CLI executable",
       Command::Template(_) => "Template operations [get] [template_name]",
+      Command::Toolbox(_) => "Open a toolbox container with the current dir as mount",
       Command::Dns(_) => "DNS operations [start|stop]",
       _ => ""
     }
@@ -133,6 +140,7 @@ pub fn handle(config: &Config) {
     Command::Help(_) => builtin::handle_help(),
     Command::Version(_) => builtin::handle_version(config),
     Command::Template(_) => template::handle_template(config),
+    Command::Toolbox(_) => toolbox::handle_toolbox(config),
     Command::Dns(_) => dns::handle_dns(config),
   }
 }
@@ -161,6 +169,7 @@ pub fn get_command<'a>(args: &'a [String], default: &'a String) -> Command<'a> {
     "ls" => Command::List("list"),
     "--ls" => Command::List("list"),
     "dns" => Command::Dns("dns"),
+    "toolbox" => Command::Toolbox("toolbox"),
     "template" => Command::Template("template"),
     custom => Command::Custom(custom)
   }

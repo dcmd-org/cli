@@ -17,7 +17,7 @@ fn handle_dns_start() {
   command
   .arg("run")
   .arg("--name")
-  .arg("dcmddns")
+  .arg("dcmd_dns")
   .arg("-p")
   .arg("53:53/udp")
   .arg("--rm")
