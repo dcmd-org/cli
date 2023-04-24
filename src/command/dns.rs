@@ -33,7 +33,7 @@ fn handle_dns_stop() {
   let mut command = Command::new("docker");
   command
   .arg("stop")
-  .arg("dcmddns");
+  .arg("dcmd_dns");
 
   println!("Stopping the DNS container...");
 
