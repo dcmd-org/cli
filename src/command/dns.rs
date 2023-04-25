@@ -4,11 +4,15 @@ use crate::config::Config;
 
 
 pub fn handle_dns(config: &Config) {
-  let action = config.get_arguments().get(0).expect("Use dns start or stop, no one specified");
-  if action == "start" {
-    handle_dns_start();
-  } else {
-    handle_dns_stop();
+  let action = config
+  .get_arguments()
+  .get(0)
+  .expect("Please provide a command for dns [start|stop]");
+
+  match action.as_str() {
+    "start" => handle_dns_start(),
+    "stop" => handle_dns_stop(),
+    _ => println!("Please provide a valid parameter such as start or stop")
   }
 }
 
