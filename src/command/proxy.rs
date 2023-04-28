@@ -46,6 +46,8 @@ fn handle_proxy_start(config: &Config) {
   .arg("80:80")
   .arg("-p")
   .arg("443:443")
+  .arg("--add-host")
+  .arg("host.docker.internal:host-gateway")
   .arg("--rm")
   .arg("-d")
   .arg(env!("PROXY_IMAGE"));
