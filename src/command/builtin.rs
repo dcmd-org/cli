@@ -97,7 +97,8 @@ pub fn handle_update(config: &Config) {
     process::exit(1);
   });
 
-  // println!("CLI successfully updated ✅");
+  println!("Do not forget to update dns, toolbox and proxy by running dcmd [dns|toolbox|proxy] update.");
+
 }
 
 pub fn handle_version(config: &Config) {

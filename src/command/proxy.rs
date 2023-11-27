@@ -7,12 +7,13 @@ pub fn handle_proxy(config: &Config) {
   let action = config
   .get_arguments()
   .get(0)
-  .expect("Please provide a command for proxy [start|stop]");
+  .expect("Please provide a command for proxy [start|stop|update]");
 
   match action.as_str() {
     "start" => handle_proxy_start(config),
     "stop" => handle_proxy_stop(),
-    _ => println!("Please provide a valid parameter such as start or stop")
+    "update" => handle_proxy_update(),
+    _ => println!("Please provide a valid parameter such as start, stop or update")
   }
 }
 
@@ -64,6 +65,17 @@ fn handle_proxy_stop() {
   .arg("dcmd_proxy");
 
   println!("Stopping the proxy container...");
+
+  super::exec_command(command);
+}
+
+fn handle_proxy_update() {
+  let mut command = Command::new("docker");
+  command
+  .arg("pull")
+  .arg(env!("PROXY_IMAGE"));
+
+  println!("Pulling the proxy container...");
 
   super::exec_command(command);
 }
